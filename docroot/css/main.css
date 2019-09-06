@@ -1,0 +1,79 @@
+/*#4267B2*/
+
+#FacebookIcon {
+    width: 40px;
+    margin-right: 10px;
+}
+
+#CombinaryLogo {
+    width: 80px;
+    height: 80px;
+    margin: 10px 0px 10px 0px;
+}
+
+a {
+    font-size: 14px;
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-primary {
+    background-color: #4267B2;
+    color: white;
+    border-color: #4267B2;
+}
+
+.btn-secondary {
+    background-color: #4267B2;
+    color: white;
+    border-color: #4267B2;
+}
+
+.btn-primary:hover {
+    color: white;
+    background-color: #4267B2;
+    border-color: #4267B2;
+}
+
+.btn-secondary:hover {
+    color: white;
+    background-color: #4267B2;
+    border-color: #4267B2;
+}
+
+label {
+    padding-left: 10px;
+}
+
+input {
+    margin-left: 20px;
+}
+
+.color_box {
+    background: #4267B2;
+}
+
+.info_box {
+    padding: 15px;
+}
+
+.post_img {
+    height: 300px;
+}
+
+#select-page {
+    margin-top: 10px;
+}
+
+#filter-form {
+    display: flex;
+}
+
+#filter-form select {
+    margin-right: 5px;
+}

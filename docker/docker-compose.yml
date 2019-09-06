@@ -1,0 +1,75 @@
+version: "2.2"
+
+services:
+  # Web
+  web:
+    env_file:
+    - ./facebook.env
+    networks:
+      - web
+      - internal
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.backend=web"
+      - "traefik.frontend.rule=Host:fb.combinary.com"
+      - "traefik.port=80"
+    extends:
+      file: ./services.yml
+      service: web
+    depends_on:
+      - cli
+
+  # DB
+  db:
+    networks:
+     - internal
+    extends:
+      file: ./services.yml
+      service: pgsql
+    volumes:
+      - ../Database/combinaryFacebook.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-combinaryfbook}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-user}
+
+  # CLI
+  cli:
+    env_file:
+      - ./facebook.env
+    networks:
+      - internal
+    extends:
+      file: ./services.yml
+      service: cli
+    environment:
+      - XDEBUG_ENABLED=1
+
+  # run `composer install` on startup
+  composer:
+    networks:
+      - internal
+    restart: 'no'
+    image: composer/composer:php7
+    command: install
+    volumes:
+      - ../:/app
+
+  # Adminer
+  adminer:
+    hostname: adminer
+    networks:
+      - internal
+    ports:
+      - "8181:8080"
+    image: adminer
+    environment:
+      - ADMINER_DEFAULT_SERVER=${DB_HOST} # db is the default database container
+      - ADMINER_PLUGINS=tables-filter tinymce # To load Adminer plugins
+      - ADMINER_DESIGN=price # To use a bundled Adminer design
+
+networks:
+  internal:
+  web:
+    external: true
