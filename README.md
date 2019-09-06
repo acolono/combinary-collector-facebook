@@ -1,11 +1,11 @@
-#Combinary Facebook Documentation
+# Combinary Facebook Collector
 An application using the Facebook Graph API to collect information from user owned pages and displaying metrics in a dashboard.
 
 For more application details (screenshots) and other services please go to: https://app.gitbook.com/@acolono/s/combinary/
 
-##Setup
+## Setup
 
-###Developer
+### Developer
 
 The app uses a docker-compose file as a base with a services.yml file.
 
@@ -13,7 +13,7 @@ The app uses a docker-compose file as a base with a services.yml file.
 2. Add the dev URL if you are in development and set the Development variable to true.
 3. For local development it is recommended to use NGROk as Facebook is strict with where callback requests are sent.
 
-###User
+### User
 
 1. Login to the application using your Facebook credentials.
 2. Select the pages you would like to import and then monitor using a webhook.
