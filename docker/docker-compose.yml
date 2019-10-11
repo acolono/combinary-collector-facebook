@@ -4,16 +4,19 @@ services:
   # Web
   web:
     env_file:
-    - ./facebook.env
+    - ./.env
     networks:
       - web
       - internal
     labels:
-      - "traefik.docker.network=web"
-      - "traefik.enable=true"
-      - "traefik.backend=web"
-      - "traefik.frontend.rule=Host:fb.combinary.com"
-      - "traefik.port=80"
+      traefik.enable: "true"
+      traefik.docker.network: "web"
+      traefik.frontend.rule: "Host:fb.combinary.com"
+      traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag: noindex, nofollow, noarchive"
+      traefik.port: "80"
+    networks:
+      - web
+      - internal
     extends:
       file: ./services.yml
       service: web
@@ -30,14 +33,14 @@ services:
     volumes:
       - ../Database/combinaryFacebook.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-combinaryfbook}
-      - POSTGRES_USER=${POSTGRES_USER:-user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-user}
+      - POSTGRES_DB=${DB_NAME:-combinaryfbook}
+      - POSTGRES_USER=${DB_USER:-user}
+      - POSTGRES_PASSWORD=${DB_PWD:-user}
 
   # CLI
   cli:
     env_file:
-      - ./facebook.env
+      - ./.env
     networks:
       - internal
     extends:
@@ -57,17 +60,17 @@ services:
       - ../:/app
 
   # Adminer
-  adminer:
-    hostname: adminer
-    networks:
-      - internal
-    ports:
-      - "8181:8080"
-    image: adminer
-    environment:
-      - ADMINER_DEFAULT_SERVER=${DB_HOST} # db is the default database container
-      - ADMINER_PLUGINS=tables-filter tinymce # To load Adminer plugins
-      - ADMINER_DESIGN=price # To use a bundled Adminer design
+#  adminer:
+#    hostname: adminer
+#    networks:
+#      - internal
+#    ports:
+#      - "8181:8080"
+#    image: adminer
+#    environment:
+#      - ADMINER_DEFAULT_SERVER=${DB_HOST} # db is the default database container
+#      - ADMINER_PLUGINS=tables-filter tinymce # To load Adminer plugins
+#      - ADMINER_DESIGN=price # To use a bundled Adminer design
 
 networks:
   internal:
