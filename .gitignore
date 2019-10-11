@@ -2,3 +2,4 @@
 .idea/*
 facebook.env
 docksal.env
+.env
