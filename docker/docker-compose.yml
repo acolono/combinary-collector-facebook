@@ -3,6 +3,7 @@ version: "2.2"
 services:
   # Web
   web:
+    restart: always
     env_file:
     - ./.env
     networks:
@@ -25,6 +26,7 @@ services:
 
   # DB
   db:
+    restart: always
     networks:
      - internal
     extends:
@@ -39,6 +41,7 @@ services:
 
   # CLI
   cli:
+    restart: always
     env_file:
       - ./.env
     networks:
