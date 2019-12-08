@@ -15,9 +15,24 @@ services:
       traefik.frontend.rule: "Host: fb.combinary.com; PathPrefix: /webhooks.php"
       traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag: noindex, nofollow, noarchive"
       traefik.port: "80"
+    extends:
+      file: ./services.yml
+      service: web
+    depends_on:
+      - cli
+  ui:
+    restart: always
+    env_file:
+    - ./.env
     networks:
       - web
       - internal
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "web"
+      traefik.frontend.rule: "Host: fb.combinary.com"
+      traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag: noindex, nofollow, noarchive"
+      traefik.port: "80"
     extends:
       file: ./services.yml
       service: web
