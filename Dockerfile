@@ -10,3 +10,4 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql  && \
     docker-php-ext-install pgsql
 COPY --from=composer /src/vendor /var/www/vendor
 COPY docroot /var/www/html
+RUN find -name '*.php' -print0 | xargs -0n1 php -l
