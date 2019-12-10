@@ -2,7 +2,7 @@ version: "2.2"
 
 services:
   # Web
-  web:
+  webhooks:
     restart: always
     env_file:
     - ./.env
@@ -12,14 +12,11 @@ services:
     labels:
       traefik.enable: "true"
       traefik.docker.network: "web"
-      traefik.frontend.rule: "Host: fb.combinary.com; PathPrefix: /webhooks.php"
+      traefik.frontend.rule: "Host: fb.example.com; PathPrefix: /webhooks.php"
       traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag: noindex, nofollow, noarchive"
       traefik.port: "80"
-    extends:
-      file: ./services.yml
-      service: web
-    depends_on:
-      - cli
+    build: ../
+
   ui:
     restart: always
     env_file:
@@ -30,65 +27,24 @@ services:
     labels:
       traefik.enable: "true"
       traefik.docker.network: "web"
-      traefik.frontend.rule: "Host: fb.combinary.com"
+      traefik.frontend.rule: "Host: fb.example.com"
       traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag: noindex, nofollow, noarchive"
+      # todo: traefik.frontend.auth.basic: "..."
       traefik.port: "80"
-    extends:
-      file: ./services.yml
-      service: web
-    depends_on:
-      - cli
+    build: ../
 
   # DB
   db:
     restart: always
     networks:
-     - internal
-    extends:
-      file: ./services.yml
-      service: pgsql
+      - internal
+    image: postgres:12-alpine
     volumes:
       - ../Database/combinaryFacebook.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
     environment:
       - POSTGRES_DB=${DB_NAME:-combinaryfbook}
       - POSTGRES_USER=${DB_USER:-user}
       - POSTGRES_PASSWORD=${DB_PWD:-user}
-
-  # CLI
-  cli:
-    restart: always
-    env_file:
-      - ./.env
-    networks:
-      - internal
-    extends:
-      file: ./services.yml
-      service: cli
-    environment:
-      - XDEBUG_ENABLED=1
-
-  # run `composer install` on startup
-  composer:
-    networks:
-      - internal
-    restart: 'no'
-    image: composer/composer:php7
-    command: install
-    volumes:
-      - ../:/app
-
-  # Adminer
-#  adminer:
-#    hostname: adminer
-#    networks:
-#      - internal
-#    ports:
-#      - "8181:8080"
-#    image: adminer
-#    environment:
-#      - ADMINER_DEFAULT_SERVER=${DB_HOST} # db is the default database container
-#      - ADMINER_PLUGINS=tables-filter tinymce # To load Adminer plugins
-#      - ADMINER_DESIGN=price # To use a bundled Adminer design
 
 networks:
   internal:
