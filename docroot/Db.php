@@ -1,4 +1,5 @@
 <?php
+require_once ('dbg.php');
 
 class Db
 {
@@ -226,12 +227,16 @@ class Db
     }
 
     function AddJson($tableName, $rawJson, $pageId) {
-
-        $result = pg_query_params($this->Connect(), "INSERT INTO ".$tableName." (raw, page_id) VALUES($1, $2)", [$rawJson, $pageId]);
+        if(!is_int($pageId)) $pageId=0;
+        $conn = $this->Connect();
+        $query = "INSERT INTO ". pg_escape_identifier($conn,$tableName) . " (raw, page_id) VALUES($1, $2)";
+        $result = pg_query_params($conn, $query, [$rawJson, $pageId]);
 
         if ($result) {
             return true;
         } else {
+            dbg(['query'=>[$query],[$rawJson, $pageId]]);
+            dbg(['pgError'=>pg_last_error($conn)]);
             return false;
         }
     }

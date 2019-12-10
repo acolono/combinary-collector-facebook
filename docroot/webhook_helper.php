@@ -1,8 +1,9 @@
 <?php
 ob_start();
 session_start();
-
-require_once('Db.php');
+require_once ('dbg.php');
+require_once ('Db.php');
+date_default_timezone_set('UTC');
 
 class webhook_helper
 {
@@ -11,16 +12,13 @@ class webhook_helper
     public function __construct()
     {
         $this->database = new Db();
-
     }
 
     function PreProcessWebhook($json_obj)
     {
-
         $raw_json = $json_obj;
-
         $json_obj = json_decode($json_obj);
-
+        dbg(['webhookJson'=>$json_obj]);
 
         $data = $json_obj->entry[0]->changes[0];
 
@@ -31,7 +29,8 @@ class webhook_helper
         $parent_id = $parentIdArray[1];
 
         if (getenv('JSON_LOGGING') === "true"){
-            $this->database->AddJson("json_webhook", $raw_json, $page_id);
+            $logged = $this->database->AddJson("json_webhook", $raw_json, $page_id);
+            dbg(['value->item'=>$data->value->item]);
         }
 
         if ($data->value->item === "comment") {
@@ -55,6 +54,7 @@ class webhook_helper
             ];
 
             $this->database->SaveCommentData($page_id, $commentId, $comment, $feedId);
+            return;
         }
 
         if ($data->value->item === "reaction") {
@@ -82,12 +82,14 @@ class webhook_helper
 
                 $this->database->Remove("reaction", $removeArray);
             }
+            return;
         }
+
+        dbg(['ignoring'=>$data]);
     }
 
     function ConvertUnixTime($unixTime)
     {
-        date_default_timezone_set('Europe/Vienna');
         return date('Y-m-d h:i:s', $unixTime);
     }
 
