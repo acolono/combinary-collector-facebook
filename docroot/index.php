@@ -43,7 +43,7 @@ $permissions = ['manage_pages']; // Optional permissions
 
 
 <div class="d-flex justify-content-center">
-    <a href=<?= htmlspecialchars($loginUrl) ?> role="button" class="btn btn-primary"><img
+    <a href="<?= htmlspecialchars($loginUrl) ?>" role="button" class="btn btn-primary"><img
                 src="images/facebook-icon.png" id="FacebookIcon"/>Login with Facebook!</a>
 </div>
 <?php

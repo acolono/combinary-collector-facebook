@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '../../vendor/facebook/graph-sdk/src/Facebook/autoload.php'; // change path as needed
+require_once 'dbg.php';
 
 if (empty($_SESSION['fb_access_token'])) {
 
