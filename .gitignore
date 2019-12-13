@@ -3,3 +3,4 @@
 facebook.env
 docksal.env
 .env
+docker-compose.override.yml
