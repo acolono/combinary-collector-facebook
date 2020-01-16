@@ -49,6 +49,16 @@ class webhook_helper
                 return;
         }
 
+        if ( $data->value->item === "post" ) {
+                if ( $data->value->verb === "remove" ) {
+                        $removeArray = [
+                                "id" => $idArray[1]
+                        ];
+                }
+                $this->database->Remove("post", $removeArray);
+                return;
+        }
+        
         if ($data->value->item === "comment") {
             $commentIdArray = $this->ExplodeId($data->value->comment_id);
 
