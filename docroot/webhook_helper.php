@@ -60,27 +60,39 @@ class webhook_helper
         }
         
         if ($data->value->item === "comment") {
-            $commentIdArray = $this->ExplodeId($data->value->comment_id);
 
+                $commentIdArray = $this->ExplodeId($data->value->comment_id);
+                $feedId = $idArray[1];
+                $commentId = $commentIdArray[1];
 
-            $feedId = $idArray[1];
+                if ($data->value->verb === "add") {
 
-            $commentId = $commentIdArray[1];
-            $from = [
-                "id" => $data->from->id,
-                "name" => $data->from->name
-            ];
+                        $comment = [
+                                "created_time" => [
+                                        "date" => $this->ConvertUnixTime($data->value->created_time)
+                                ],
+                                "message" => $data->value->message,
+                                "comment_count" => 0,
+                                "like_count" => 0,
+                                "from" => [
+                                        "id" => $data->value->from->id,
+                                        "name" => $data->value->from->name
+                                ]
+                        ];
 
-            $comment = [
-                "created_time" => $this->ConvertUnixTime($json_obj->entry[0]->time),
-                "message" => $data->message,
-                "comment_count" => 0,
-                "like_count" => 0,
-                "from" => $from
-            ];
+                        $comment = json_decode(json_encode($comment));
+                        $this->database->SaveCommentData($page_id, $commentId, $comment, $feedId);
 
-            $this->database->SaveCommentData($page_id, $commentId, $comment, $feedId);
-            return;
+                } elseif ($data->value->verb === "remove") {
+
+                        $removeArray = [
+                                "id" => $commentId
+                        ];
+                        $this->database->Remove("comment", $removeArray);
+
+                }
+
+                return;
         }
 
         if ($data->value->item === "reaction") {
