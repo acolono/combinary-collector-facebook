@@ -33,6 +33,22 @@ class webhook_helper
             dbg(['value->item'=>$data->value->item]);
         }
 
+        if ( $data->value->item === "status" ) {
+
+                $postArray = [
+                        'id' => $idArray[1],
+                        'page_id' => $idArray[0],
+                        'type' => $data->value->item,
+                        'created_time' => $this->ConvertUnixTime($data->value->created_time),
+                        'story' => '',
+                        'message' => $data->value->message
+                ];
+
+                $post = (object) $postArray;
+                $this->database->SavePostData( $post, $post->page_id );
+                return;
+        }
+
         if ($data->value->item === "comment") {
             $commentIdArray = $this->ExplodeId($data->value->comment_id);
 
@@ -90,7 +106,7 @@ class webhook_helper
 
     function ConvertUnixTime($unixTime)
     {
-        return date('Y-m-d h:i:s', $unixTime);
+        return date("c", $unixTime);
     }
 
     function ExplodeId($id)
