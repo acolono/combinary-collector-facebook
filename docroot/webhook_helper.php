@@ -33,7 +33,7 @@ class webhook_helper
             dbg(['value->item'=>$data->value->item]);
         }
 
-        if ( $data->value->item === "status" ) {
+        if ( in_array( $data->value->item, array("status","share","photo","video") ) ) {
 
                 if ($data->value->verb === "add") {
 
