@@ -83,6 +83,19 @@ class webhook_helper
                         $comment = json_decode(json_encode($comment));
                         $this->database->SaveCommentData($page_id, $commentId, $comment, $feedId);
 
+                } elseif ($data->value->verb === "edited") {
+
+                        $condition = [
+                            "id" => $commentId
+                        ];
+
+                        $newcomment = [
+                            "message" => $data->value->message
+                        ];
+
+                        $this->database->Update("comment", $newcomment, $condition);
+
+
                 } elseif ($data->value->verb === "remove") {
 
                         $removeArray = [

@@ -35,6 +35,12 @@ class Db
         }
     }
 
+    public function Update($tableName, $array, $conditions)
+    {
+        $res = pg_update($this->Connect(), $tableName, $array, $conditions);
+        return $res;
+    }
+
     public function Remove($tableName, $array)
     {
         $res = pg_delete($this->Connect(), $tableName, $array);
