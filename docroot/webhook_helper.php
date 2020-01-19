@@ -35,17 +35,34 @@ class webhook_helper
 
         if ( $data->value->item === "status" ) {
 
-                $postArray = [
-                        'id' => $idArray[1],
-                        'page_id' => $idArray[0],
-                        'type' => $data->value->item,
-                        'created_time' => $this->ConvertUnixTime($data->value->created_time),
-                        'story' => '',
-                        'message' => $data->value->message
-                ];
+                if ($data->value->verb === "add") {
 
-                $post = (object) $postArray;
-                $this->database->SavePostData( $post, $post->page_id );
+                    $postArray = [
+                            'id' => $idArray[1],
+                            'page_id' => $idArray[0],
+                            'type' => $data->value->item,
+                            'created_time' => $this->ConvertUnixTime($data->value->created_time),
+                            'story' => '',
+                            'message' => $data->value->message
+                    ];
+
+                    $post = (object) $postArray;
+                    $this->database->SavePostData( $post, $post->page_id );
+
+                } elseif($data->value->verb === "edited") {
+
+                    $condition = [
+                        'id' => $idArray[1]
+                    ];
+
+                    $newstatus = [
+                        'message' => $data->value->message
+                    ];
+
+                    $this->database->Update("post", $newstatus, $condition);
+
+                }
+
                 return;
         }
 
@@ -94,7 +111,6 @@ class webhook_helper
                         ];
 
                         $this->database->Update("comment", $newcomment, $condition);
-
 
                 } elseif ($data->value->verb === "remove") {
 
