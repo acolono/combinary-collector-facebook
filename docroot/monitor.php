@@ -138,7 +138,7 @@ $page_list = [];
         if (!$facebook->WebhookStatus($pageArray[0])) {
             $facebook->SubscribeToWebhooks($pageArray[0]);
         }
-        $facebook->SubscribeAppToWebhooks();
+        //$facebook->SubscribeAppToWebhooks();
         ?>
         <script>
             ChangeCheckbox("<?php echo $pageArray[0] ?>")
