@@ -161,7 +161,7 @@ class Db
         $postArray = [
             "id" => $post->id,
             "page_id" => $pageId,
-            "type" => $post->type,
+            "type" => $post->status_type,
             "created_time" => $post->created_time,
             "story" => $post->story,
             "message" => $post->message

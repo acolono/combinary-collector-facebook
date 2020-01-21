@@ -40,7 +40,7 @@ class webhook_helper
                     $postArray = [
                             'id' => $idArray[1],
                             'page_id' => $idArray[0],
-                            'type' => $data->value->item,
+                            'status_type' => $data->value->item,
                             'created_time' => $this->ConvertUnixTime($data->value->created_time),
                             'story' => '',
                             'message' => $data->value->message
@@ -69,6 +69,7 @@ class webhook_helper
                                 ];
 
                                 $attach = json_decode(json_encode($attachArray));
+
                                 $this->database->SaveAttachmentData($idArray[0],$idArray[1],$attach);
                         }
 
@@ -171,7 +172,7 @@ class webhook_helper
                     $postArray = [
                         'id' => $data->value->album_id,
                         'page_id' => $data->value->from->id,
-                        'type' => $data->value->item,
+                        'status_type' => $data->value->item,
                         'created_time' => $this->ConvertUnixTime($data->value->created_time),
                         'story' => '',
                         'message' => ''

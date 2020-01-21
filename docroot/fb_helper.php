@@ -16,8 +16,8 @@ class fb_helper
 
     function SavePostsOnPage($pageId)
     {
-        $query = '/' . $pageId . '/feed/?fields=message,story,link,created_time,type,name,id,comments{from,message,like_count,comment_count,created_time,comments{from,like_count,comment_count,message,created_time}},attachments,likes,reactions';
-        
+        $query = '/' . $pageId . '/feed/?fields=message,story,created_time,status_type,id,comments{from,message,like_count,comment_count,created_time,comments{from,like_count,comment_count,message,created_time}},attachments,likes,reactions';
+
         try{
         $response = $this->facebook->fb->get($query, $this->facebook->GetAccessToken());
 
