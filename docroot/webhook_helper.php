@@ -49,11 +49,99 @@ class webhook_helper
                     $post = (object) $postArray;
                     $this->database->SavePostData( $post, $post->page_id );
 
-                } elseif($data->value->verb === "edited") {
+                    // attachments stuff
+
+                    if ( $data->value->item === "status" && isset($data->value->photos) ) {
+                        // save post photos (multiple) to attachments
+
+                        foreach( $data->value->photos as $photo ) {
+
+                                $attachArray = [
+                                    'type' => "photo",
+                                    'media' => [
+                                        'image' => [
+                                            'src' => $photo
+                                        ]
+                                    ],
+                                    'target' => [
+                                        'url' => sprintf("https://www.facebook.com/%s/posts/%s", $idArray[0], $idArray[1])
+                                    ]
+                                ];
+
+                                $attach = json_decode(json_encode($attachArray));
+                                $this->database->SaveAttachmentData($idArray[0],$idArray[1],$attach);
+                        }
+
+                        dbg(["saveattachment" => "photos"]);
+                    }
+
+                    if ( $data->value->item === "photo" ) {
+                        // save photo to attachment
+
+                        $attachArray = [
+                            'type' => $data->value->item,
+                            'description' => $data->value->message,
+                            'media' => [
+                                'image' => [
+                                    'src' => $data->value->link
+                                ]
+                            ],
+                            'target' => [
+                                'id' => $data->value->photo_id,
+                                'url' => sprintf("https://www.facebook.com/%s/posts/%s", $idArray[0], $idArray[1])
+                            ]
+                        ];
+
+                        //$attach = (object) $attachArray;
+                        $attach = json_decode(json_encode($attachArray));
+                        $this->database->SaveAttachmentData($idArray[0],$idArray[1],$attach);
+                        dbg(["saveattachment" => 'photo']);
+                    }
+
+                    if ( $data->value->item === "video" ) {
+                        // save video to attachment
+                        // missing screenshot
+
+                        $attachArray = [
+                            'type' => $data->value->item,
+                            'description' => $data->value->message,
+                            'media' => [
+                                'image' => [
+                                    'src' => $data->value->link
+                                ]
+                            ],
+                            'target' => [
+                                'id' => $data->value->video_id,
+                                'url' => sprintf("https://www.facebook.com/%s/posts/%s", $idArray[0], $idArray[1])
+                            ]
+                        ];
+
+                        //$attach = (object) $attachArray;
+                        $attach = json_decode(json_encode($attachArray));
+                        $this->database->SaveAttachmentData($idArray[0],$idArray[1],$attach);
+
+                        dbg(["saveattachment" => 'video']);
+                    }
+
+                } elseif( $data->value->verb === "edited" ) {
 
                     $condition = [
                         'id' => $idArray[1]
                     ];
+
+                    if( $data->value->item === "photo" ) {
+
+                        $newData = [
+                            'target_id' => $data->value->photo_id,
+                            'media_url' => $data->value->link,
+                            'target_url' => sprintf("https://www.facebook.com/%s/posts/%s", $idArray[0], $idArray[1])
+                        ];
+
+                        $this->database->Update("attachment", $newData, $condition);
+                        dbg(["photoupdate" => "photo"]);
+
+                        return;
+                    }
 
                     $newstatus = [
                         'message' => $data->value->message
@@ -73,6 +161,42 @@ class webhook_helper
                         ];
                 }
                 $this->database->Remove("post", $removeArray);
+                return;
+        }
+
+        if ( $data->value->item === "album" ) {
+
+                if( $data->value->verb === "add" ) {
+
+                    $postArray = [
+                        'id' => $data->value->album_id,
+                        'page_id' => $data->value->from->id,
+                        'type' => $data->value->item,
+                        'created_time' => $this->ConvertUnixTime($data->value->created_time),
+                        'story' => '',
+                        'message' => ''
+                    ];
+
+                    $post = (object) $postArray;
+                    $this->database->SavePostData( $post, $post->page_id );
+
+                    if( isset( $data->value->photo_ids ) ) {
+
+                        foreach( $data->value->photo_ids as $photo_id) {
+
+                            $attachArray = [
+                                'type' => "photo"
+                            ];
+
+                            $attach = json_decode(json_encode($attachArray));
+                            $this->database->SaveAttachmentData($data->value->from->id,$photo_id,$attach);
+
+                        }
+
+                    }
+
+                }
+
                 return;
         }
         
