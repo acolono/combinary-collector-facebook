@@ -155,48 +155,28 @@ $page_list = [];
     if ($database->CheckPageIdExists($filter)) {
 
     ?>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4 info_box">
-                    <?= $info->GetTotalComments($filter); ?>
-                </div>
-                <div class="col-sm-4 color_box"></div>
-                <div class="col-sm-4 info_box">
-                    <h3>Total Likes...</h3>
-                    <?= $info->GetTotalLikes($filter); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 info_box">
-                    <h3>Latest comment...</h3>
-                    <?= $info->GetLatestComment($filter); ?>
-                </div>
-                <div class="col-sm-4 color_box"></div>
-                <div class="col-sm-4 info_box">
-                    <h3>Most Liked...</h3>
-                    <?= $info->GetMostLiked($filter); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 color_box"></div>
-                <div class="col-sm-4 info_box">
-                    <h3>Most Commented...</h3>
-                    <?= $info->GetMostCommented($filter); ?>
-                </div>
-                <div class="col-sm-4 color_box"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 info_box">
-                    <h3>Latest post...</h3>
-                    <?= $info->GetLatestPost($filter); ?>
-                </div>
-                <div class="col-sm-4 color_box"></div>
-                <div class="col-sm-4 info_box">
-                    <h3>Latest image...</h3>
-                    <img class="post_img" src=<?= $info->GetMedia($filter); ?>>
-                </div>
-            </div>
+        <div class="container text-center mt-5">
+            <?= $info->GetTotalComments($filter); ?>
+            <hr />
+            <h3>Total Likes...</h3>
+            <?= $info->GetTotalLikes($filter); ?>
+            <hr />
+            <h3>Latest comment...</h3>
+            <?= $info->GetLatestComment($filter); ?>
+            <hr />
+            <h3>Most Liked...</h3>
+            <?= $info->GetMostLiked($filter); ?>
+            <hr />
+            <h3>Most Commented...</h3>
+            <?= $info->GetMostCommented($filter); ?>
+            <hr />
+            <h3>Latest post...</h3>
+            <?= $info->GetLatestPost($filter); ?>
+            <hr />
+            <h3>Latest image...</h3>
+            <img class="post_img" src=<?= $info->GetMedia($filter); ?>>
         </div>
+
     <?php } else {
         echo "<div class='d-flex justify-content-center'>";
         echo "No data available for this page, please import data.";
