@@ -174,7 +174,7 @@ $page_list = [];
             <?= $info->GetLatestPost($filter); ?>
             <hr />
             <h3>Latest image...</h3>
-            <img class="post_img" src=<?= $info->GetMedia($filter); ?>>
+            <img class="post_img" src="<?= $info->GetMedia($filter); ?>">
         </div>
 
     <?php } else {
